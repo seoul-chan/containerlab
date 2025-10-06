@@ -1,0 +1,90 @@
+name: vxlan
+prefix: "" 
+topology:
+  kinds:
+    ceos:
+      image: ceos:4.34.2F
+  nodes:
+    spine1:
+      kind: ceos
+      startup-config: "configs/spine1/Spine1.cfg"
+      binds:
+        - configs/spine1/startup-config:/mnt/flash/startup-config
+    spine2:
+      kind: ceos
+      startup-config: "configs/spine2/Spine2.cfg"
+      binds:
+        - configs/spine2/startup-config:/mnt/flash/startup-config
+    leaf1:
+      kind: ceos
+      startup-config: "configs/leaf1/Leaf1.cfg"
+      binds:
+        - configs/leaf1/startup-config:/mnt/flash/startup-config
+    leaf2:
+      kind: ceos
+      startup-config: "configs/leaf2/Leaf2.cfg"
+      binds:
+        - configs/leaf2/startup-config:/mnt/flash/startup-config
+    leaf3:
+      kind: ceos
+      startup-config: "configs/leaf3/Leaf3.cfg"
+      binds:
+        - configs/leaf3/startup-config:/mnt/flash/startup-config
+    host1:
+      kind: ceos
+      binds:
+        - configs/host1/ceos-config:/mnt/flash/ceos-config
+        - configs/host1/startup-config:/mnt/flash/startup-config
+    host2:
+      kind: ceos
+      binds:
+        - configs/host2/ceos-config:/mnt/flash/ceos-config
+        - configs/host2/startup-config:/mnt/flash/startup-config
+    host3:
+      kind: ceos
+      binds:
+        - configs/host3/ceos-config:/mnt/flash/ceos-config
+        - configs/host3/startup-config:/mnt/flash/startup-config
+    host4:
+      kind: ceos
+      binds:
+        - configs/host4/ceos-config:/mnt/flash/ceos-config
+        - configs/host4/startup-config:/mnt/flash/startup-config
+    host5:
+      kind: ceos
+      binds:
+        - configs/host5/ceos-config:/mnt/flash/ceos-config
+        - configs/host5/startup-config:/mnt/flash/startup-config
+    host6:
+      kind: ceos
+      binds:
+        - configs/host6/ceos-config:/mnt/flash/ceos-config
+        - configs/host6/startup-config:/mnt/flash/startup-config
+  links:
+    - endpoints: ["Spine1:eth2", "Leaf1:eth1"]
+    - endpoints: ["Spine1:eth3", "Leaf2:eth1"]
+    - endpoints: ["Spine1:eth4", "Leaf3:eth1"]
+    - endpoints: ["Spine2:eth2", "Leaf1:eth2"]
+    - endpoints: ["Spine2:eth3", "Leaf2:eth2"]
+    - endpoints: ["Spine2:eth4", "Leaf3:eth2"]
+    - endpoints: ["Leaf1:eth3", "host1:eth1"]
+    - endpoints: ["Leaf1:eth4", "host2:eth1"]
+    - endpoints: ["Leaf2:eth3", "host3:eth1"]
+    - endpoints: ["Leaf2:eth4", "host4:eth1"]
+    - endpoints: ["Leaf3:eth3", "host5:eth1"]
+    - endpoints: ["Leaf3:eth4", "host6:eth1"]
+    
+
+# clab deploy -t vxlan.yaml
+# clab inspect -t vxlan.yaml
+# clab graph -t vxlan.yaml
+# clab destroy -t vxlan.yaml : 작성한 토폴로지 제거 → node 설정 파일(startup config) 유지
+# clab destroy -ac vxlan.yaml : 토폴로지 완전 초기화
+
+# apt-get update
+# apt-get install net-tools
+# apt install iputils-ping
+# apt install vim 
+# apt install netplan.io -y
+
+# apt install openssh-server
