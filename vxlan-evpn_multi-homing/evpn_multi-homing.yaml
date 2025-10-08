@@ -4,8 +4,6 @@ topology:
   kinds:
     ceos:
       image: ceos:4.34.2F
-    # linux:
-    #   image: ubuntu
   nodes:
     spine1:
       kind: ceos
