@@ -59,13 +59,13 @@ topology:
     - endpoints: ["spine2:eth4", "leaf3:eth2"]
     
     - endpoints: ["leaf1:eth3", "host1:eth1"]
-    - endpoints: ["leaf1:eth4", "host1:eth2"]
-    - endpoints: ["leaf1:eth5", "host2:eth1"]
-    - endpoints: ["leaf1:eth6", "host2:eth2"]
+    - endpoints: ["leaf1:eth4", "host2:eth1"]
+    - endpoints: ["leaf1:eth5", "host3:eth1"]
+    - endpoints: ["leaf1:eth6", "host4:eth1"]
 
-    - endpoints: ["leaf2:eth3", "host3:eth1"]
-    - endpoints: ["leaf2:eth4", "host3:eth2"]
-    - endpoints: ["leaf2:eth5", "host4:eth1"]
+    - endpoints: ["leaf2:eth3", "host1:eth2"]
+    - endpoints: ["leaf2:eth4", "host2:eth2"]
+    - endpoints: ["leaf2:eth5", "host3:eth2"]
     - endpoints: ["leaf2:eth6", "host4:eth2"]
 
     - endpoints: ["leaf3:eth3", "host5:eth1"]
