@@ -30,11 +30,16 @@ management api gnmi
 management api netconf
    transport ssh default
 !
+interface Port-Channel1
+   switchport access vlan 100
+!
 interface Ethernet1
    switchport access vlan 100
+   channel-group 1 mode active
 !
 interface Ethernet2
    switchport access vlan 100
+   channel-group 1 mode active
 !
 interface Management0
    ip address 172.20.20.4/24
