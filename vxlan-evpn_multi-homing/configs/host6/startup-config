@@ -1,0 +1,61 @@
+! Startup-config last modified at Sun Oct  5 23:02:32 2025 by admin
+! device: host6 (cEOSLab, EOS-4.34.2F-43232954.4342F.1 (engineering build))
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$iNecUg5Fo/.laBMF$mh6wTL3Z0Wg8r65XReMVG8GdWbLD.2yOZB69p5vwEESrBkSgl.QQPw8ly4hTpm/iqEh/PoDbfDCv8goMZIWEN0
+!
+management api http-commands
+   no shutdown
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname host6
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 100
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
+interface Ethernet1
+   switchport access vlan 100
+!
+interface Ethernet2
+   switchport access vlan 100
+!
+interface Management0
+   ip address 172.20.20.7/24
+   ipv6 address 3fff:172:20:20::7/64
+!
+interface Vlan100
+   ip address 172.16.20.22/24
+!
+no ip routing
+!
+ip route 0.0.0.0/0 172.16.20.254
+ip route 0.0.0.0/0 172.20.20.1
+ip route 172.16.10.0/24 172.16.20.254
+!
+ipv6 route ::/0 3fff:172:20:20::1
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
