@@ -1,4 +1,4 @@
-name: vxlan
+name: evpn_L3VPN-single
 prefix: "" 
 topology:
   kinds:
@@ -7,65 +7,49 @@ topology:
   nodes:
     spine1:
       kind: ceos
-      startup-config: "configs/spine1/spine1.cfg"
-      binds:
-        - configs/spine1/startup-config:/mnt/flash/startup-config
+      startup-config: "configs/spine1.cfg"
     spine2:
       kind: ceos
-      startup-config: "configs/spine2/spine2.cfg"
-      # binds:
-      #   - configs/spine2/startup-config:/mnt/flash/startup-config
+      startup-config: "configs/spine2.cfg"
     leaf1:
       kind: ceos
-      startup-config: "configs/leaf1/leaf1.cfg"
-      # binds:
-      #   - configs/leaf1/startup-config:/mnt/flash/startup-config
+      startup-config: "configs/leaf1.cfg"
     leaf2:
       kind: ceos
-      startup-config: "configs/leaf2/leaf2.cfg"
-      # binds:
-      #   - configs/leaf2/startup-config:/mnt/flash/startup-config
+      startup-config: "configs/leaf2.cfg"
     leaf3:
       kind: ceos
-      startup-config: "configs/leaf3/leaf3.cfg"
-      # binds:
-      #   - configs/leaf3/startup-config:/mnt/flash/startup-config
+      startup-config: "configs/leaf3.cfg"
     host1:
       kind: ceos
       startup-config: "configs/host1/host1.cfg"
       binds:
         - configs/host1/ceos-config:/mnt/flash/ceos-config
-        # - configs/host1/startup-config:/mnt/flash/startup-config
     host2:
       kind: ceos
       startup-config: "configs/host2/host2.cfg"
       binds:
         - configs/host2/ceos-config:/mnt/flash/ceos-config
-        # - configs/host2/startup-config:/mnt/flash/startup-config
     host3:
       kind: ceos
       startup-config: "configs/host3/host3.cfg"
       binds:
         - configs/host3/ceos-config:/mnt/flash/ceos-config
-        # - configs/host3/startup-config:/mnt/flash/startup-config
     host4:
       kind: ceos
       startup-config: "configs/host4/host4.cfg"
       binds:
         - configs/host4/ceos-config:/mnt/flash/ceos-config
-        # - configs/host4/startup-config:/mnt/flash/startup-config
     host5:
       kind: ceos
       startup-config: "configs/host5/host5.cfg"
       binds:
         - configs/host5/ceos-config:/mnt/flash/ceos-config
-        # - configs/host5/startup-config:/mnt/flash/startup-config
     host6:
       kind: ceos
       startup-config: "configs/host6/host6.cfg"
       binds:
         - configs/host6/ceos-config:/mnt/flash/ceos-config
-        # - configs/host6/startup-config:/mnt/flash/startup-config
   links:
     - endpoints: ["spine1:eth2", "leaf1:eth1"]
     - endpoints: ["spine1:eth3", "leaf2:eth1"]
