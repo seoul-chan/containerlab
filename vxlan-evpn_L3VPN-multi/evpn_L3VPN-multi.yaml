@@ -4,8 +4,6 @@ topology:
   kinds:
     ceos:
       image: ceos:4.34.2F
-    # linux:
-    #   image: ubuntu
   nodes:
     Spine1:
       kind: ceos
@@ -53,7 +51,6 @@ topology:
         - configs/host6/ceos-config:/mnt/flash/ceos-config
         - configs/host6/startup-config:/mnt/flash/startup-config
   links:
-    # - endpoints: ["Spine1:eth1", "Spine2:eth1"]
     - endpoints: ["Spine1:eth2", "Leaf1:eth1"]
     - endpoints: ["Spine1:eth3", "Leaf2:eth1"]
     - endpoints: ["Spine1:eth4", "Leaf3:eth1"]
