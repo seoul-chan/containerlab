@@ -1,0 +1,75 @@
+name: evpn_L3VPN-multi
+prefix: "" 
+topology:
+  kinds:
+    ceos:
+      image: ceos:4.34.2F
+    # linux:
+    #   image: ubuntu
+  nodes:
+    Spine1:
+      kind: ceos
+      startup-config: "configs/Spine1.cfg"
+    Spine2:
+      kind: ceos
+      startup-config: "configs/Spine2.cfg"
+    Leaf1:
+      kind: ceos
+      startup-config: "configs/Leaf1.cfg"
+    Leaf2:
+      kind: ceos
+      startup-config: "configs/Leaf2.cfg"
+    Leaf3:
+      kind: ceos
+      startup-config: "configs/Leaf3.cfg"
+    host1:
+      kind: ceos
+      binds:
+        - configs/host1/ceos-config:/mnt/flash/ceos-config
+        - configs/host1/startup-config:/mnt/flash/startup-config
+    host2:
+      kind: ceos
+      binds:
+        - configs/host2/ceos-config:/mnt/flash/ceos-config
+        - configs/host2/startup-config:/mnt/flash/startup-config
+    host3:
+      kind: ceos
+      binds:
+        - configs/host3/ceos-config:/mnt/flash/ceos-config
+        - configs/host3/startup-config:/mnt/flash/startup-config
+    host4:
+      kind: ceos
+      binds:
+        - configs/host4/ceos-config:/mnt/flash/ceos-config
+        - configs/host4/startup-config:/mnt/flash/startup-config
+    host5:
+      kind: ceos
+      binds:
+        - configs/host5/ceos-config:/mnt/flash/ceos-config
+        - configs/host5/startup-config:/mnt/flash/startup-config
+    host6:
+      kind: ceos
+      binds:
+        - configs/host6/ceos-config:/mnt/flash/ceos-config
+        - configs/host6/startup-config:/mnt/flash/startup-config
+  links:
+    # - endpoints: ["Spine1:eth1", "Spine2:eth1"]
+    - endpoints: ["Spine1:eth2", "Leaf1:eth1"]
+    - endpoints: ["Spine1:eth3", "Leaf2:eth1"]
+    - endpoints: ["Spine1:eth4", "Leaf3:eth1"]
+    - endpoints: ["Spine2:eth2", "Leaf1:eth2"]
+    - endpoints: ["Spine2:eth3", "Leaf2:eth2"]
+    - endpoints: ["Spine2:eth4", "Leaf3:eth2"]
+    - endpoints: ["Leaf1:eth3", "host1:eth1"]
+    - endpoints: ["Leaf1:eth4", "host2:eth1"]
+    - endpoints: ["Leaf2:eth3", "host3:eth1"]
+    - endpoints: ["Leaf2:eth4", "host4:eth1"]
+    - endpoints: ["Leaf3:eth3", "host5:eth1"]
+    - endpoints: ["Leaf3:eth4", "host6:eth1"]
+    
+
+# clab deploy -t evpn_L3VPN-multi.yaml
+# clab inspect -t evpn_L3VPN-multi.yaml
+# clab graph -t evpn_L3VPN-multi.yaml
+# clab destroy -t evpn_L3VPN-multi.yaml : 작성한 토폴로지 제거 → node 설정 파일(startup config) 유지
+# clab destroy -ac evpn_L3VPN-multi.yaml : 토폴로지 완전 초기화
