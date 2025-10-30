@@ -22,34 +22,34 @@ topology:
       startup-config: "configs/Leaf3.cfg"
     host1:
       kind: ceos
+      startup-config: "configs/host1/host1.cfg"
       binds:
         - configs/host1/ceos-config:/mnt/flash/ceos-config
-        - configs/host1/startup-config:/mnt/flash/startup-config
     host2:
       kind: ceos
+      startup-config: "configs/host1/host2.cfg"
       binds:
         - configs/host2/ceos-config:/mnt/flash/ceos-config
-        - configs/host2/startup-config:/mnt/flash/startup-config
     host3:
       kind: ceos
+      startup-config: "configs/host1/host3.cfg"
       binds:
         - configs/host3/ceos-config:/mnt/flash/ceos-config
-        - configs/host3/startup-config:/mnt/flash/startup-config
     host4:
       kind: ceos
+      startup-config: "configs/host1/host4.cfg"
       binds:
         - configs/host4/ceos-config:/mnt/flash/ceos-config
-        - configs/host4/startup-config:/mnt/flash/startup-config
     host5:
       kind: ceos
+      startup-config: "configs/host1/host5.cfg"
       binds:
         - configs/host5/ceos-config:/mnt/flash/ceos-config
-        - configs/host5/startup-config:/mnt/flash/startup-config
     host6:
       kind: ceos
+      startup-config: "configs/host1/host6.cfg"
       binds:
         - configs/host6/ceos-config:/mnt/flash/ceos-config
-        - configs/host6/startup-config:/mnt/flash/startup-config
   links:
     - endpoints: ["Spine1:eth2", "Leaf1:eth1"]
     - endpoints: ["Spine1:eth3", "Leaf2:eth1"]
