@@ -46,8 +46,6 @@ topology:
     ext-router:
       kind: linux
       image: frrouting/frr:latest
-      # NAT(iptables)를 위해 privileged 권한이 필수입니다.
-      # privileged: true
       cap-add:
         - "NET_ADMIN"   # iptables NAT 설정을 위한 권한
         - "SYS_ADMIN"   # sysctl (IP 포워딩) 설정을 위한 권한
