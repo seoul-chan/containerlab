@@ -55,7 +55,7 @@ topology:
       # 그 다음 FRR의 기본 프로세스(/sbin/docker-init)를 실행
       # cmd: sh -c "/etc/frr/startup.sh && /sbin/docker-init"
   links:
-    # --- 기존 Spine-Leaf 링크 ---
+    # --- Spine-Leaf 링크 ---
     - endpoints: ["spine1:eth2", "leaf1:eth1"]
     - endpoints: ["spine1:eth3", "leaf2:eth1"]
     - endpoints: ["spine1:eth4", "leaf3:eth1"]
@@ -65,7 +65,7 @@ topology:
     # --- 신규 Spine-BorderLeaf 링크 추가 ---
     - endpoints: ["spine1:eth5", "borderleaf:eth1"]
     - endpoints: ["spine2:eth5", "borderleaf:eth2"]
-    # --- 기존 Leaf-Host 링크 ---
+    # --- Leaf-Host 링크 ---
     - endpoints: ["leaf1:eth3", "host1:eth1"]
     - endpoints: ["leaf1:eth4", "host2:eth1"]
     - endpoints: ["leaf2:eth3", "host3:eth1"]
