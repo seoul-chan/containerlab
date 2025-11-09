@@ -1,0 +1,130 @@
+name: evpn_L3VPN-multi_multi-site
+prefix: "" 
+topology:
+  kinds:
+    ceos:
+      image: ceos:4.34.2F
+  nodes:
+    DC1_spine1:
+      kind: ceos
+      startup-config: "configs/DC1/spine1.cfg"
+    DC1_spine2:
+      kind: ceos
+      startup-config: "configs/DC1/spine2.cfg"
+    DC1_leaf1:
+      kind: ceos
+      startup-config: "configs/DC1/leaf1.cfg"
+    DC1_leaf2:
+      kind: ceos
+      startup-config: "configs/DC1/leaf2.cfg"
+    DC1_leaf3:
+      kind: ceos
+      startup-config: "configs/DC1/leaf3.cfg"
+    DC1_borderleaf1:
+      kind: ceos
+      startup-config: "configs/DC1/borderleaf1.cfg"
+
+    DC2_spine1:
+      kind: ceos
+      startup-config: "configs/DC2/spine1.cfg"
+    DC2_spine2:
+      kind: ceos
+      startup-config: "configs/DC2/spine2.cfg"
+    DC2_leaf1:
+      kind: ceos
+      startup-config: "configs/DC2/leaf1.cfg"
+    DC2_leaf2:
+      kind: ceos
+      startup-config: "configs/DC2/leaf2.cfg"
+    DC2_leaf3:
+      kind: ceos
+      startup-config: "configs/DC2/leaf3.cfg"
+    DC2_borderleaf2:
+      kind: ceos
+      startup-config: "configs/DC2/borderleaf2.cfg"
+
+    host1:
+      kind: ceos
+      startup-config: "configs/host1/host1.cfg"
+      binds:
+        - configs/host1/ceos-config:/mnt/flash/ceos-config
+    host2:
+      kind: ceos
+      startup-config: "configs/host2/host2.cfg"
+      binds:
+        - configs/host2/ceos-config:/mnt/flash/ceos-config
+    host3:
+      kind: ceos
+      startup-config: "configs/host3/host3.cfg"
+      binds:
+        - configs/host3/ceos-config:/mnt/flash/ceos-config
+    host4:
+      kind: ceos
+      startup-config: "configs/host4/host4.cfg"
+      binds:
+        - configs/host4/ceos-config:/mnt/flash/ceos-config
+    host5:
+      kind: ceos
+      startup-config: "configs/host5/host5.cfg"
+      binds:
+        - configs/host5/ceos-config:/mnt/flash/ceos-config
+    host6:
+      kind: ceos
+      startup-config: "configs/host6/host6.cfg"
+      binds:
+        - configs/host6/ceos-config:/mnt/flash/ceos-config
+
+    ext-router:
+      kind: linux
+      image: frrouting/frr:latest
+      cap-add:
+        - "NET_ADMIN"
+        - "SYS_ADMIN"
+      binds:
+        - configs/ext-router/startup.sh:/etc/frr/startup.sh
+
+  links:
+    # --- Spine-Leaf 링크 ---
+    - endpoints: ["spine1:eth2", "leaf1:eth1"]
+    - endpoints: ["spine1:eth3", "leaf2:eth1"]
+    - endpoints: ["spine1:eth4", "leaf3:eth1"]
+    - endpoints: ["spine2:eth2", "leaf1:eth2"]
+    - endpoints: ["spine2:eth3", "leaf2:eth2"]
+    - endpoints: ["spine2:eth4", "leaf3:eth2"]
+
+    # --- 신규 Spine-borderleaf1 링크 추가 ---
+    - endpoints: ["spine1:eth5", "borderleaf1:eth1"]
+    - endpoints: ["spine2:eth5", "borderleaf1:eth2"]
+
+    # --- Leaf-Host 링크 ---
+    - endpoints: ["leaf1:eth3", "host1:eth1"]
+    - endpoints: ["leaf1:eth4", "host2:eth1"]
+    - endpoints: ["leaf2:eth3", "host3:eth1"]
+    - endpoints: ["leaf2:eth4", "host4:eth1"]
+    - endpoints: ["leaf3:eth3", "host5:eth1"]
+    - endpoints: ["leaf3:eth4", "host6:eth1"]
+
+    # --- borderleaf1-External 라우터 링크 (VRF별 1개씩) ---
+    - endpoints: ["borderleaf1:eth5", "ext-router:eth1"] # VRF A용
+    - endpoints: ["borderleaf1:eth6", "ext-router:eth2"] # VRF B용
+
+# clab deploy -t evpn_L3VPN-multi_External.yaml
+# clab inspect -t evpn_L3VPN-multi_External.yaml
+# clab graph -t evpn_L3VPN-multi_External.yaml
+# clab destroy -t evpn_L3VPN-multi_External.yaml : 작성한 토폴로지 제거 → node 설정 파일(startup config) 유지
+# clab destroy -ac evpn_L3VPN-multi_External.yaml : 토폴로지 완전 초기화
+
+# ======== ext-router 초기 세팅 ==========
+# 1. ext-router 콘솔 접속
+# docker exec -it ext-router bash
+
+# 2. startup.sh 실행 및 IP 설정 확인(eth1::내부 / eth0::외부)
+# /etc/frr/startup.sh
+# ip a show eth0
+# ip a show eth1
+# ip a show eth2
+
+# apk update
+# apk add tcpdump
+
+# tcpdump -i eth1 -n icmp
