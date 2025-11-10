@@ -1,4 +1,4 @@
-name: evpn_L3VPN-multi_multi-site
+name: evpn_multi-site
 prefix: "" 
 topology:
   kinds:
