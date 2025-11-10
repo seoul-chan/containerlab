@@ -17,12 +17,17 @@ topology:
     DC1_leaf2:
       kind: ceos
       startup-config: "configs/DC1/leaf2.cfg"
-    DC1_leaf3:
+    DC1_borderleaf:
       kind: ceos
-      startup-config: "configs/DC1/leaf3.cfg"
-    DC1_borderleaf1:
-      kind: ceos
-      startup-config: "configs/DC1/borderleaf1.cfg"
+      startup-config: "configs/DC1/borderleaf.cfg"
+    DC1_ext-router:
+      kind: linux
+      image: frrouting/frr:latest
+      cap-add:
+        - "NET_ADMIN"
+        - "SYS_ADMIN"
+      binds:
+        - configs/ext-router/startup.sh:/etc/frr/startup.sh
 
     DC2_spine1:
       kind: ceos
@@ -36,13 +41,19 @@ topology:
     DC2_leaf2:
       kind: ceos
       startup-config: "configs/DC2/leaf2.cfg"
-    DC2_leaf3:
+    DC2_borderleaf:
       kind: ceos
-      startup-config: "configs/DC2/leaf3.cfg"
-    DC2_borderleaf2:
-      kind: ceos
-      startup-config: "configs/DC2/borderleaf2.cfg"
-
+      startup-config: "configs/DC2/borderleaf.cfg"
+    DC2_ext-router:
+      kind: linux
+      image: frrouting/frr:latest
+      cap-add:
+        - "NET_ADMIN"
+        - "SYS_ADMIN"
+      binds:
+        - configs/ext-router/startup.sh:/etc/frr/startup.sh
+    
+    # DC1 Host
     host1:
       kind: ceos
       startup-config: "configs/host1/host1.cfg"
@@ -63,6 +74,7 @@ topology:
       startup-config: "configs/host4/host4.cfg"
       binds:
         - configs/host4/ceos-config:/mnt/flash/ceos-config
+    # DC2 Host
     host5:
       kind: ceos
       startup-config: "configs/host5/host5.cfg"
@@ -73,40 +85,65 @@ topology:
       startup-config: "configs/host6/host6.cfg"
       binds:
         - configs/host6/ceos-config:/mnt/flash/ceos-config
-
-    ext-router:
-      kind: linux
-      image: frrouting/frr:latest
-      cap-add:
-        - "NET_ADMIN"
-        - "SYS_ADMIN"
+    host7:
+      kind: ceos
+      startup-config: "configs/host7/host7.cfg"
       binds:
-        - configs/ext-router/startup.sh:/etc/frr/startup.sh
+        - configs/host7/ceos-config:/mnt/flash/ceos-config
+    host8:
+      kind: ceos
+      startup-config: "configs/host8/host8.cfg"
+      binds:
+        - configs/host8/ceos-config:/mnt/flash/ceos-config
 
-  links:
-    # --- Spine-Leaf 링크 ---
-    - endpoints: ["spine1:eth2", "leaf1:eth1"]
-    - endpoints: ["spine1:eth3", "leaf2:eth1"]
-    - endpoints: ["spine1:eth4", "leaf3:eth1"]
-    - endpoints: ["spine2:eth2", "leaf1:eth2"]
-    - endpoints: ["spine2:eth3", "leaf2:eth2"]
-    - endpoints: ["spine2:eth4", "leaf3:eth2"]
+    wan-router1:
+      kind: ceos
+      startup-config: "configs/wan-router1.cfg"
+    wan-router2:
+      kind: ceos
+      startup-config: "configs/wan-router2.cfg"
 
-    # --- 신규 Spine-borderleaf1 링크 추가 ---
-    - endpoints: ["spine1:eth5", "borderleaf1:eth1"]
-    - endpoints: ["spine2:eth5", "borderleaf1:eth2"]
+links:
+    # --- DC1: 내부 Spine-Leaf 연결 ---
+    - endpoints: ["DC1_spine1:eth2", "DC1_leaf1:eth1"]
+    - endpoints: ["DC1_spine1:eth3", "DC1_leaf2:eth1"]
+    - endpoints: ["DC1_spine1:eth4", "DC1_borderleaf:eth1"]
 
-    # --- Leaf-Host 링크 ---
-    - endpoints: ["leaf1:eth3", "host1:eth1"]
-    - endpoints: ["leaf1:eth4", "host2:eth1"]
-    - endpoints: ["leaf2:eth3", "host3:eth1"]
-    - endpoints: ["leaf2:eth4", "host4:eth1"]
-    - endpoints: ["leaf3:eth3", "host5:eth1"]
-    - endpoints: ["leaf3:eth4", "host6:eth1"]
+    - endpoints: ["DC1_spine2:eth2", "DC1_leaf1:eth2"]
+    - endpoints: ["DC1_spine2:eth3", "DC1_leaf2:eth2"]
+    - endpoints: ["DC1_spine2:eth4", "DC1_borderleaf:eth2"]
 
-    # --- borderleaf1-External 라우터 링크 (VRF별 1개씩) ---
-    - endpoints: ["borderleaf1:eth5", "ext-router:eth1"] # VRF A용
-    - endpoints: ["borderleaf1:eth6", "ext-router:eth2"] # VRF B용
+    # --- DC2: 내부 Spine-Leaf 연결 ---
+    - endpoints: ["DC2_spine1:eth2", "DC2_leaf1:eth1"]
+    - endpoints: ["DC2_spine1:eth3", "DC2_leaf2:eth1"]
+    - endpoints: ["DC2_spine1:eth4", "DC2_borderleaf:eth1"]
+
+    - endpoints: ["DC2_spine2:eth2", "DC2_leaf1:eth2"]
+    - endpoints: ["DC2_spine2:eth3", "DC2_leaf2:eth2"]
+    - endpoints: ["DC2_spine2:eth4", "DC2_borderleaf:eth2"]
+
+    # --- DC1: 호스트 연결 ---
+    - endpoints: ["DC1_leaf1:eth3", "host1:eth1"]
+    - endpoints: ["DC1_leaf1:eth4", "host2:eth1"]
+    - endpoints: ["DC1_leaf2:eth3", "host3:eth1"]
+    - endpoints: ["DC1_leaf2:eth4", "host4:eth1"]
+
+    # --- DC2: 호스트 연결 ---
+    - endpoints: ["DC2_leaf1:eth3", "host5:eth1"]
+    - endpoints: ["DC2_leaf1:eth4", "host6:eth1"]
+    - endpoints: ["DC2_leaf2:eth3", "host7:eth1"]
+    - endpoints: ["DC2_leaf2:eth4", "host8:eth1"]
+
+    # --- DCI: WAN 구간 연결 (BorderLeaf <-> WAN Routers) ---
+    - endpoints: ["DC1_borderleaf:eth5", "wan-router1:eth1"]
+    - endpoints: ["DC1_borderleaf:eth6", "wan-router2:eth1"]
+    
+    - endpoints: ["DC2_borderleaf:eth5", "wan-router1:eth2"]
+    - endpoints: ["DC2_borderleaf:eth6", "wan-router2:eth2"]
+
+    # --- Internet: 외부 NAT 라우터 연결 (Local Breakout) ---
+    - endpoints: ["DC1_borderleaf:eth7", "DC1_ext-router:eth1"]
+    - endpoints: ["DC2_borderleaf:eth7", "DC2_ext-router:eth1"]
 
 # clab deploy -t evpn_L3VPN-multi_External.yaml
 # clab inspect -t evpn_L3VPN-multi_External.yaml
