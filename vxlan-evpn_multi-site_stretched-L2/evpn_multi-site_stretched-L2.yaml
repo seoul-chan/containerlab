@@ -1,4 +1,4 @@
-name: evpn_multi-site
+name: evpn_multi-site_stretched-L2
 prefix: "" 
 topology:
   kinds:
@@ -151,11 +151,11 @@ topology:
     - endpoints: ["DC2_leaf2:eth3", "host7:eth1"]
     - endpoints: ["DC2_leaf2:eth4", "host8:eth1"]
 
-# clab deploy -t evpn_multi-site.yaml
-# clab inspect -t evpn_multi-site.yaml
-# clab graph -t evpn_multi-site.yaml
-# clab destroy -t evpn_multi-site.yaml : 작성한 토폴로지 제거 → node 설정 파일(startup config) 유지
-# clab destroy -ac evpn_multi-site.yaml : 토폴로지 완전 초기화
+# clab deploy -t evpn_multi-site_stretched-L2.yaml
+# clab inspect -t evpn_multi-site_stretched-L2.yaml
+# clab graph -t evpn_multi-site_stretched-L2.yaml
+# clab destroy -t evpn_multi-site_stretched-L2.yaml : 작성한 토폴로지 제거 → node 설정 파일(startup config) 유지
+# clab destroy -ac evpn_multi-site_stretched-L2.yaml : 토폴로지 완전 초기화
 
 # ======== ext-router 초기 세팅 ==========
 # 1. ext-router 콘솔 접속
